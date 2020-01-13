@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Notification Generator</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
+    <body>
+        <main>
+            <h1>Notification Generator</h1>
+            <div class="halfBox">
+                <div class="half">
+                    <h2>Form</h2>
+                    <form id="notifForm">
+                        <div>
+                            <label for="clientName">Client Name:</label>
+                            <input type="text" id="clientName" name="clientName" required>
+                        </div>
+                        <div>
+                            <fieldset>
+                                <legend>Client Gender:</legend>
+                                <div>
+                                    <input checked type="radio" name="clientGender" id="female" value="chị"><label for="female" required>Female</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="clientGender" id="male" value="anh" required><label for="male">Male</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div>
+                            <label for="premium">Monthly Premium:</label>
+                            <input type="text" id="premium" name="premium" required>
+                        </div>
+                        <div>
+                            <label for="total">Total Owed:</label>
+                            <input type="text" id="total" name="total">
+                        </div>
+                        <div>
+                            <label for="paid">Paid?</label>
+                            <input type="checkbox" id="paid" name="paid">
+                        </div>
+                        <div id="isPaid">
+                            <label for="autopay">Autopay?</label>
+                            <input type="checkbox" id="autopay" name="autopay">
+                        </div>
+                        <div id="isNotPaid">
+                            <label for="validPayment">Was payment Valid?</label>
+                            <input type="checkbox" id="validPayment" name="validPayment">
+                        </div>
+                        <button type="submit" id="notifFormSubmit">Submit</button>
+                    </form>
+                </div>
+                <div class="half">
+                    <h2>Copy & Paste</h2>
+                    <h3>Vietnamese</h3>
+                    <button id="copyVietButton" class="copyButton">Copy Text</button>
+                    <div id="copyViet"></div>
+                    <h3>English</h3>
+                    <button id="copyEngButton" class="copyButton">Copy Text</button>
+                    <div id="copyEng"></div>
+                </div>
+            </div>
+        </main>
+        <script src="script.js"></script>
+    </body>
+</html>

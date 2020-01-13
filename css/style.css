@@ -1,0 +1,47 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+fieldset {
+    display: inline-block;
+}
+
+body {
+    padding: 2rem;
+    font-family: Arial;
+}
+
+form div {
+    margin: 0.75rem 0;
+}
+
+input {
+    display: block;
+    margin-top: 0.2rem;
+}
+
+input[type=checkbox], input[type=radio] {
+    display: inline-block;
+}
+
+.halfBox {
+    display: flex;
+    margin: 0 -1rem;
+}
+
+.half {
+    max-width: 45%;
+    margin: 0 1rem;
+}
+
+textarea {
+    min-height: 300px;
+    width: 100%;
+}
+
+.copyButton {
+    margin-bottom: 0.5rem;
+}
