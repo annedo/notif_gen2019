@@ -79,7 +79,7 @@ Mỗi tháng trả: $${premium}.
 ${capitalize(clientGender)} nợ: 2 tháng, là $${total}. 
 Ngày đáo hạn: 1/20/2020
 
-Nếu ${clientGender} có câu hỏi hay cần giúp, gọi/nhắn tin Thuy Bell vào 727-280-4563. Cám ơn!`
+Nếu ${clientGender} có câu hỏi hay cần giúp, gọi/nhắn tin Thuy Bell 727-280-4563. Cám ơn!`
                 var notifEng =
 `Hi ${clientName}, Bright Health has not received your premium payments yet, and your payment details (if given to Thuy Bell) are not valid. If you do not pay by the due date, your policy will be cancelled.
 
@@ -99,7 +99,7 @@ Ngày đáo hạn: 1/20/2020
 
 Nếu ${capitalize(clientGender)} muón Thuy Bell trả bằng thẻ/nhà băng ${clientGender} đã cho, trả lời YES.
 
-Nếu ${clientGender} có câu hỏi hay cần giúp, gọi/nhắn tin Thuy Bell vào 727-280-4563. Cám ơn!`
+Nếu ${clientGender} có câu hỏi hay cần giúp, gọi/nhắn tin Thuy Bell 727-280-4563. Cám ơn!`
                 var notifEng =
 `Hi ${clientName}, Bright Health has not received your premium payments yet. If you do not pay by the due date, your policy will be cancelled.
 
@@ -116,13 +116,13 @@ If you have questions or need help please call/text Thuy Bell at 727-280-4563. T
             //If paid, were they enrolled in autopay?
             if (autopay) {
                 var notifViet = 
-`Chào ${clientGender} ${clientName}, Thuy Bell đã trả tiền còn nợ ($${total}) cho Bright Health bằng thẻ/nhà băng anh đã cho. anh có Autopay, là tự động rút $${premium} chên thẻ/nhà băng anh đã cho mỗi tháng ngày 16, bắt đầu Feb 16. Nếu cấn thay đổi thẻ/nhà băng hay bỏ hủy Autopay, thông báo Thuy liền cho tránh phí tiềm năng và mất bảo hiểm. Nếu anh có câu hỏi gọi/tin nhắn Thuy Bell theo 727-280-4563. Cám ơn!`
+`Chào ${clientGender} ${clientName}, Thuy Bell đã trả tiền còn nợ ($${total}) cho Bright Health bằng thẻ/nhà băng anh đã cho. anh có Autopay, là tự động rút $${premium} chên thẻ/nhà băng anh đã cho mỗi tháng ngày 16, bắt đầu Feb 16. Nếu cấn thay đổi thẻ/nhà băng hay bỏ hủy Autopay, thông báo Thuy liền cho tránh phí tiềm năng và mất bảo hiểm. Nếu anh có câu hỏi gọi/tin nhắn Thuy Bell 727-280-4563. Cám ơn!`
                 var notifEng =
 `Hi ${clientName}, Thuy Bell has paid your owed premiums ($${total}) to Bright Health with the card/bank details you previously provided. We setup Autopay for you, which automatically charges your card/bank $${premium} every month on the 16th, starting Feb 16. If you need to change your card/bank or cancel Autopay, notify Thuy immediately to avoid potential fees and loss of insurance. If you have any questions, please call/text Thuy Bell at 727-280-4563. Thank you!`
             }
             else {
                 var notifViet = 
-`Chào ${clientGender} ${clientName}, Thuy Bell đã trả tiền còn nợ ($${total}) cho Bright Health bằng thẻ/nhà băng anh đã cho. Mỗi tháng anh sẽ nhận thư cho $${premium} anh có trách nhiệm tự trả. Nếu anh muón Autopay (tự động trả) hay có câu hỏi, gọi/tin nhắn Thuy Bell theo 727-280-4563. Cám ơn!`
+`Chào ${clientGender} ${clientName}, Thuy Bell đã trả tiền còn nợ ($${total}) cho Bright Health bằng thẻ/nhà băng anh đã cho. Mỗi tháng anh sẽ nhận thư cho $${premium} anh có trách nhiệm tự trả. Nếu anh muón Autopay (tự động trả) hay có câu hỏi, gọi/tin nhắn Thuy Bell 727-280-4563. Cám ơn!`
                 var notifEng =
 `Hi ${clientName}, Thuy Bell has paid your owed premiums ($${total}) to Bright Health with the details you previously provided. You are responsible for future bills of $${premium} each month, which will arrive by mail. If you want to setup autopay or have any questions, please call/text Thuy Bell at 727-280-4563. Thank you!`
             }
