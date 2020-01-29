@@ -14,52 +14,107 @@
                     <h2>Form</h2>
                     <form id="notifForm">
                         <div>
-                            <label for="clientName">Client Name:</label>
-                            <input type="text" id="clientName" name="clientName" required>
-                        </div>
-                        <div>
                             <fieldset>
-                                <legend>Client Gender:</legend>
+                                <legend>Notification Type:</legend>
                                 <div>
-                                    <input checked type="radio" name="clientGender" id="female" value="chị"><label for="female" required>Female</label>
+                                    <input checked type="radio" name="notifType" id="documents" value="documents"><label for="documents" required>Missing Documents</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="clientGender" id="male" value="anh" required><label for="male">Male</label>
+                                    <input type="radio" name="notifType" id="payment" value="payment" required><label for="payment">Missing Payment</label>
                                 </div>
                             </fieldset>
                         </div>
-                        <div>
+                        <!-- GLOBAL FORM SECTION-->
+                        <section id="sectionGlobal">
                             <fieldset>
-                                <legend>Company:</legend>
+                                <legend>Client Info</legend>
                                 <div>
-                                    <input checked type="radio" name="company" id="ambetter" value="Ambetter"><label for="ambetter" required>Ambetter</label>
+                                    <label for="clientName">Client Name:</label>
+                                    <input type="text" id="clientName" name="clientName" required>
                                 </div>
                                 <div>
-                                    <input type="radio" name="company" id="brighthealth" value="Bright Health" required><label for="brighthealth">Bright Health</label>
+                                    <fieldset>
+                                        <legend>Client Gender:</legend>
+                                        <div>
+                                            <input checked type="radio" name="clientGender" id="female" value="chị"><label for="female" required>Female</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="clientGender" id="male" value="anh" required><label for="male">Male</label>
+                                        </div>
+                                    </fieldset>
                                 </div>
                             </fieldset>
-                        </div>
-                        <div>
-                            <label for="premium">Monthly Premium:</label>
-                            <input type="text" id="premium" name="premium" required>
-                        </div>
-                        <div>
-                            <label for="total">Total Owed:</label>
-                            <input type="text" id="total" name="total">
-                        </div>
-                        <div>
-                            <label for="paid">Paid?</label>
-                            <input type="checkbox" id="paid" name="paid">
-                        </div>
-                        <div id="isPaid">
-                            <label for="autopay">Autopay?</label>
-                            <input type="checkbox" id="autopay" name="autopay">
-                        </div>
-                        <div id="isNotPaid">
-                            <label for="validPayment">Was payment Valid?</label>
-                            <input type="checkbox" id="validPayment" name="validPayment">
-                        </div>
-                        <button type="submit" id="notifFormSubmit">Submit</button>
+                        </section>
+                        <!-- MISSING DOCUMENTS FORM SECTION-->
+                        <section id="sectionDocs">
+                            <div>
+                                <label for="dueDate">Due Date:</label>
+                                <input type="date" name="dueDate" id="dueDate" required>
+                            </div>
+                            <div>
+                                <fieldset id="member1" class="memberInfo">
+                                    <legend>Missing Member 1:</legend>
+                                    <div>
+                                        <label for="member1_name">Name:</label>
+                                        <input type="text" name="member1_name" id="member1_name" required>
+                                    </div>
+                                    <fieldset>
+                                        <legend>Documents:</legend>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="member1_income" value="income"><label for="member1_income">Income</label>
+                                        </div>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="member1_ssn" value="SSN"><label for="member1_ssn">SSN</label>
+                                        </div>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="member1_citizenship" value="Naturalization Certificate"><label for="member1_citizenship">Naturalization Certificate</label>
+                                        </div>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="greencard" value="greencard"><label for="greencard">Greencard</label>
+                                        </div>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="letter" value="health coverage letter"><label for="letter">Health Coverage Letter</label>
+                                        </div>
+                                    </fieldset>
+                                </fieldset>
+                                <button id="addMemberButton">+ Add Member</button>
+                            </div>
+                        </section>
+                        <!-- MISSING PAYMENT FORM SECTION-->
+                        <section id="sectionPayment">
+                            <div>
+                                <fieldset>
+                                    <legend>Company:</legend>
+                                    <div>
+                                        <input checked type="radio" name="company" id="ambetter" value="Ambetter"><label for="ambetter" required>Ambetter</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="company" id="brighthealth" value="Bright Health" required><label for="brighthealth">Bright Health</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div>
+                                <label for="premium">Monthly Premium:</label>
+                                <input type="text" id="premium" name="premium" required>
+                            </div>
+                            <div>
+                                <label for="total">Total Owed:</label>
+                                <input type="text" id="total" name="total">
+                            </div>
+                            <div>
+                                <label for="paid">Paid?</label>
+                                <input type="checkbox" id="paid" name="paid">
+                            </div>
+                            <div id="isPaid">
+                                <label for="autopay">Autopay?</label>
+                                <input type="checkbox" id="autopay" name="autopay">
+                            </div>
+                            <div id="isNotPaid">
+                                <label for="validPayment">Was payment Valid?</label>
+                                <input type="checkbox" id="validPayment" name="validPayment">
+                            </div>
+                        </section>
+                        <button type="submit" id="submitButton">Submit</button>
                     </form>
                 </div>
                 <div class="half">
