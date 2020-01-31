@@ -186,17 +186,18 @@ function generateNotif() {
                 else {
                     var numbering = `${memberIndex + 1}) `
                 }
-                var memberReqsEng = `${numbering}${memberName.value}'s ${docsListEng.join(", ")}`
-                var memberReqsViet = `${numbering}${memberName.value}'s ${docsListViet.join(", ")}`
+                var memberReqsEng = `${numbering}${memberName.value}'s ${docsListEng.join(", ")} `
+                var memberReqsViet = `${numbering}${docsListViet.join(", ")} của ${memberName.value}`
 
                 reqsListEng.push(memberReqsEng);
                 reqsListViet.push(memberReqsViet);
             }
 
-            var reqsListStr = reqsList.join("; ");
+            var reqsStrEng = reqsListEng.join("; ");
+            var reqsStrViet = reqsListViet.join("; ");
 
-            var notifViet = `Chào ${clientGender} ${clientName}, văn phòng Thuy Bell Obamacare đây (727-280-4563). ${capitalize(clientGender)} gửi hình `
-            var notifEng = `Hi ${clientName}, this is Thuy Bell Obamacare (727-280-4563). We need photos of `
+            var notifViet = `Chào ${clientGender} ${clientName}, văn phòng Thuy Bell Obamacare đây. ${capitalize(clientGender)} làm ơn nhắn tin hình ${reqsStrViet}. Nếu ${clientGender} có câu hổi gọi/tin nhắn Thuy 727-280-4563. Cám ơn!`
+            var notifEng = `Hi ${clientName}, this is Thuy Bell Obamacare. Please send us photos of ${reqsListEng}. If you have questions call/text Thuy at 727-280-4563. Thank you!`
         }
 
         else if (form.notifType.value == "payment") {
@@ -207,11 +208,14 @@ function generateNotif() {
             let paid = form.paid.checked;
             let autopay = form.autopay.checked;
             let validPayment = form.validPayment.checked;
-            if (company == "Ambetter") {
+            if (company == "Ambetter" || company == "Oscar Insurance") {
                 var dueDate = "1/31/2020"
             }
-            else {
+            else if (company == "Bright Health") {
                 var dueDate = "1/20/2020"
+            }
+            else {
+                var dueDate = "PLEASE ENTER DUE DATE"
             }
 
             //Was premium paid?
