@@ -56,7 +56,7 @@
                                     <legend>Missing Member 1:</legend>
                                     <div>
                                         <label for="member1_name">Name:</label>
-                                        <input type="text" name="member1_name" id="member1_name" required>
+                                        <input type="text" name="member1_name" id="member1_name">
                                     </div>
                                     <fieldset>
                                         <legend>Documents:</legend>
@@ -70,10 +70,10 @@
                                             <input name="member1_docs" type="checkbox" id="member1_citizenship" value="Naturalization Certificate"><label for="member1_citizenship">Naturalization Certificate</label>
                                         </div>
                                         <div>
-                                            <input name="member1_docs" type="checkbox" id="greencard" value="greencard"><label for="greencard">Greencard</label>
+                                            <input name="member1_docs" type="checkbox" id="member1_greencard" value="greencard"><label for="member1_greencard">Greencard</label>
                                         </div>
                                         <div>
-                                            <input name="member1_docs" type="checkbox" id="letter" value="health coverage letter"><label for="letter">Health Coverage Letter</label>
+                                            <input name="member1_docs" type="checkbox" id="member1_letter" value="health coverage letter"><label for="member1_letter">Health Coverage Letter</label>
                                         </div>
                                     </fieldset>
                                 </fieldset>
@@ -128,6 +128,9 @@
                     <h3>English</h3>
                     <button id="copyEngButton" class="copyButton">Copy Text</button>
                     <div id="copyEng"></div>
+                    <h3>Both</h3>
+                    <button id="copyBothButton" class="copyButton">Copy Text</button>
+                    <div id="copyBoth"></div>
                 </div>
             </div>
         </main>

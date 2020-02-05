@@ -157,6 +157,7 @@ function generateNotif() {
     else {
         var clientName = capitalize(form.clientName.value);
         var clientGender = form.clientGender.value;
+        var clientDate = new Date(form.dueDate.value).toLocaleDateString();
 
         if (form.notifType.value == "documents") {
             event.preventDefault();
@@ -165,11 +166,8 @@ function generateNotif() {
             var reqsListEng = [];
             var reqsListViet = [];
 
-            for (var memberIndex = 0; memberIndex < memberSections.length; memberIndex++) {
-                let memberId = memberSections[memberIndex].id;
-
-                let memberName = form[`${memberId}_name`];
-                var docsOptions = form[`${memberId}_docs`];
+            if (memberSections.length === 1 && form.member1_name.value == "") {
+                var docsOptions = form.member1_docs;
                 var docsListEng = [];
                 var docsListViet = [];
 
@@ -180,24 +178,45 @@ function generateNotif() {
                     }
                 }
 
-                if (memberSections.length === 1) {
-                    var numbering = '';
-                }
-                else {
-                    var numbering = `${memberIndex + 1}) `
-                }
-                var memberReqsEng = `${numbering}${memberName.value}'s ${docsListEng.join(", ")} `
-                var memberReqsViet = `${numbering}${docsListViet.join(", ")} của ${memberName.value}`
+                reqsListEng.push(`your ${docsListEng.join(", ")}`)
+                reqsListViet.push(`${docsListViet.join(", ")} của ${clientGender}`)
+            }
+            else {
+                for (var memberIndex = 0; memberIndex < memberSections.length; memberIndex++) {
+                    let memberId = memberSections[memberIndex].id;
 
-                reqsListEng.push(memberReqsEng);
-                reqsListViet.push(memberReqsViet);
+                    let memberName = form[`${memberId}_name`];
+                    var docsOptions = form[`${memberId}_docs`];
+                    var docsListEng = [];
+                    var docsListViet = [];
+
+                    for (var i = docsOptions.length - 1; i >= 0; i--) {
+                        if (docsOptions[i].checked) {
+                            docsListEng.push(docsOptions[i].value);
+                            docsListViet.push(translation[docsOptions[i].value])
+                        }
+                    }
+
+                    if (memberSections.length === 1) {
+                        var numbering = '';
+                    }
+                    else {
+                        var numbering = `${memberIndex + 1}) `
+                    }
+                    var memberReqsEng = `${numbering}${memberName.value}'s ${docsListEng.join(", ")}`
+                    var memberReqsViet = `${numbering}${docsListViet.join(", ")} của ${memberName.value}`
+
+                    reqsListEng.push(memberReqsEng);
+                    reqsListViet.push(memberReqsViet);
+                }
             }
 
             var reqsStrEng = reqsListEng.join("; ");
             var reqsStrViet = reqsListViet.join("; ");
 
-            var notifViet = `Chào ${clientGender} ${clientName}, văn phòng Thuy Bell Obamacare đây. ${capitalize(clientGender)} làm ơn nhắn tin hình ${reqsStrViet}. Nếu ${clientGender} có câu hổi gọi/tin nhắn Thuy 727-280-4563. Cám ơn!`
-            var notifEng = `Hi ${clientName}, this is Thuy Bell Obamacare. Please send us photos of ${reqsListEng}. If you have questions call/text Thuy at 727-280-4563. Thank you!`
+            var notifViet = `Chào ${clientGender} ${clientName}, Obamacare của ${clientGender} cần bổ sung thêm giấy tờ. Làm ơn nhắn tin hình ${reqsStrViet}. Nếu không gửi trước khì ${clientDate}, giá bảo hiểm của ${clientGender} sẽ tăng lên. Liên lạc Thuy Bell 727-280-4563. Cám ơn!`
+
+            var notifEng = `Hi ${clientName}, we need more documents to verify your Obamacare. Please send us photos of ${reqsListEng}. If not sent before ${clientDate}, your premium will increase. Contact Thuy Bell at 727-280-4563. Thank you!`
         }
 
         else if (form.notifType.value == "payment") {
@@ -282,9 +301,13 @@ function generateNotif() {
 
         let vietSection = document.getElementById("copyViet");
         let engSection = document.getElementById("copyEng");
+        let bothSection = document.getElementById("copyBoth");
+
+        var notifBoth = [notifViet, notifEng].join('\n\n');
 
         insertParagraph(notifViet, vietSection)
         insertParagraph(notifEng, engSection)
+        insertParagraph(notifBoth, bothSection)
     }
 }
 
