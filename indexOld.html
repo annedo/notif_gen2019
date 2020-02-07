@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Notification Generator</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
+    <body>
+        <main>
+            <h1>Notification Generator</h1>
+            <div class="halfBox">
+                <div class="half">
+                    <h2>Form</h2>
+                    <form id="notifForm">
+                        <div>
+                            <fieldset>
+                                <legend>Notification Type:</legend>
+                                <div>
+                                    <input checked type="radio" name="notifType" id="documents" value="documents"><label for="documents">Missing Documents</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="notifType" id="payment" value="payment"><label for="payment">Missing Payment</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- GLOBAL FORM SECTION-->
+                        <section id="sectionGlobal">
+                            <fieldset>
+                                <legend>Client Info</legend>
+                                <div>
+                                    <label for="clientName">Client Name:</label>
+                                    <input type="text" id="clientName" name="clientName" required>
+                                </div>
+                                <div>
+                                    <fieldset>
+                                        <legend>Client Gender:</legend>
+                                        <div>
+                                            <input checked type="radio" name="clientGender" id="female" value="chị"><label for="female" required>Female</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="clientGender" id="male" value="anh" required><label for="male">Male</label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </fieldset>
+                        </section>
+                        <!-- MISSING DOCUMENTS FORM SECTION-->
+                        <section id="sectionDocs">
+                            <div>
+                                <label for="dueDate">Due Date:</label>
+                                <input type="date" name="dueDate" id="dueDate" required>
+                            </div>
+                            <div>
+                                <fieldset id="member1" class="memberInfo">
+                                    <legend>Missing Member 1:</legend>
+                                    <div>
+                                        <label for="member1_name">Name:</label>
+                                        <input type="text" name="member1_name" id="member1_name">
+                                    </div>
+                                    <fieldset>
+                                        <legend>Documents:</legend>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="member1_income" value="income"><label for="member1_income">Income</label>
+                                        </div>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="member1_ssn" value="SSN"><label for="member1_ssn">SSN</label>
+                                        </div>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="member1_citizenship" value="Naturalization Certificate"><label for="member1_citizenship">Naturalization Certificate</label>
+                                        </div>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="member1_greencard" value="greencard"><label for="member1_greencard">Greencard</label>
+                                        </div>
+                                        <div>
+                                            <input name="member1_docs" type="checkbox" id="member1_letter" value="health coverage letter"><label for="member1_letter">Health Coverage Letter</label>
+                                        </div>
+                                    </fieldset>
+                                </fieldset>
+                                <button type="button" id="addMemberButton">+ Add Member</button>
+                            </div>
+                        </section>
+                        <!-- MISSING PAYMENT FORM SECTION-->
+                        <section id="sectionPayment">
+                            <div>
+                                <fieldset>
+                                    <legend>Company:</legend>
+                                    <div>
+                                        <input checked type="radio" name="company" id="ambetter" value="Ambetter"><label for="ambetter" required>Ambetter</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="company" id="brighthealth" value="Bright Health" required><label for="brighthealth">Bright Health</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="company" id="oscar" value="Oscar Insurance" required><label for="oscar">Oscar</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div>
+                                <label for="premium">Monthly Premium:</label>
+                                <input type="text" id="premium" name="premium" required>
+                            </div>
+                            <div>
+                                <label for="total">Total Owed:</label>
+                                <input type="text" id="total" name="total">
+                            </div>
+                            <div>
+                                <label for="paid">Paid?</label>
+                                <input type="checkbox" id="paid" name="paid">
+                            </div>
+                            <div id="isPaid">
+                                <label for="autopay">Autopay?</label>
+                                <input type="checkbox" id="autopay" name="autopay">
+                            </div>
+                            <div id="isNotPaid">
+                                <label for="validPayment">Was payment Valid?</label>
+                                <input type="checkbox" id="validPayment" name="validPayment">
+                            </div>
+                        </section>
+                        <button type="submit" id="submitButton">Submit</button>
+                    </form>
+                </div>
+                <div class="half">
+                    <h2>Copy & Paste</h2>
+                    <h3>Vietnamese</h3>
+                    <button type="button" id="copyVietButton" class="copyButton">Copy Text</button>
+                    <div id="copyViet"></div>
+                    <h3>English</h3>
+                    <button type="button" id="copyEngButton" class="copyButton">Copy Text</button>
+                    <div id="copyEng"></div>
+                    <h3>Both</h3>
+                    <button type="button" id="copyBothButton" class="copyButton">Copy Text</button>
+                    <div id="copyBoth"></div>
+                </div>
+            </div>
+        </main>
+        <script src="script.js"></script>
+    </body>
+</html>
