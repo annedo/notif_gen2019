@@ -91,7 +91,7 @@ function addMember(event) {
     let memberDOM = new DOMParser().parseFromString(`
     <fieldset id="${nextId}" class="memberInfo">
         <legend>Missing Member ${lastId + 1}:</legend>
-        <button id="${nextId}_removeButton">x Remove Member</button>
+        <button type="button" id="${nextId}_removeButton">x Remove Member</button>
         <div>
             <label for="${nextId}_name">Name:</label>
             <input type="text" name="${nextId}_name" id="${nextId}_name" required>
@@ -157,7 +157,7 @@ function generateNotif() {
     else {
         var clientName = capitalize(form.clientName.value);
         var clientGender = form.clientGender.value;
-        var clientDate = new Date(form.dueDate.value).toLocaleDateString();
+        var clientDate = new Date(form.dueDate.value).toLocaleDateString('en-us', {timeZone: 'UTC'});
 
         if (form.notifType.value == "documents") {
             event.preventDefault();
@@ -216,7 +216,7 @@ function generateNotif() {
 
             var notifViet = `Chào ${clientGender} ${clientName}, Obamacare của ${clientGender} cần bổ sung thêm giấy tờ. Làm ơn nhắn tin hình ${reqsStrViet}. Nếu không gửi trước khì ${clientDate}, giá bảo hiểm của ${clientGender} sẽ tăng lên. Liên lạc Thuy Bell 727-280-4563. Cám ơn!`
 
-            var notifEng = `Hi ${clientName}, we need more documents to verify your Obamacare. Please send us photos of ${reqsListEng}. If not sent before ${clientDate}, your premium will increase. Contact Thuy Bell at 727-280-4563. Thank you!`
+            var notifEng = `Hi ${clientName}, we need more documents to verify your Obamacare. Please send us photos of ${reqsStrEng}. If not sent before ${clientDate}, your premium will increase. Contact Thuy Bell at 727-280-4563. Thank you!`
         }
 
         else if (form.notifType.value == "payment") {
