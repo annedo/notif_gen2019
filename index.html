@@ -8,7 +8,7 @@
     </head>
     <body>
         <main>
-            <h1>Notifiication Generator</h1>
+            <h1>Notification Generator</h1>
             <div id="app">
                 <div class="halfBox">
                     <div class="half">
@@ -18,11 +18,11 @@
                                 <fieldset>
                                     <legend>Notification Type:</legend>
                                     <div>
-                                        <input type="radio" id="documents" value="documents" v-model="formValues.notifType">
+                                        <input type="radio" id="documents" value="documents" v-model="notifType">
                                         <label for="documents">Missing Documents</label>
                                     </div>
                                     <div>
-                                        <input type="radio" id="payment" value="payment" v-model="formValues.notifType">
+                                        <input type="radio" id="payment" value="payment" v-model="notifType">
                                         <label for="payment">Missing Payment</label>
                                     </div>
                                 </fieldset>
@@ -33,23 +33,23 @@
                                     <legend>Client Info</legend>
                                     <div>
                                         <label for="clientName">Client Name:</label>
-                                        <input type="text" id="clientName" required v-model="formValues.clientName">
+                                        <input type="text" id="clientName" required v-model="clientName">
                                     </div>
                                     <div>
                                         <fieldset>
                                             <legend>Client Gender:</legend>
                                             <div>
-                                                <input checked type="radio" id="female" value="chị" v-model="formValues.clientGender">
+                                                <input checked type="radio" id="female" value="chị" v-model="clientGender">
                                                 <label for="female">Female</label>
                                             </div>
                                             <div>
-                                                <input type="radio" id="male" value="anh" v-model="formValues.clientGender">
+                                                <input type="radio" id="male" value="anh" v-model="clientGender">
                                                 <label for="male">Male</label>
                                             </div>
                                         </fieldset>
                                         <div>
                                             <label for="dueDate">Due Date:</label>
-                                            <input type="date" id="dueDate" v-model="formValues.dueDate" value="dueDate" required>
+                                            <input type="date" id="dueDate" v-model="dueDate" value="dueDate" required>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -92,38 +92,38 @@
                                     <fieldset>
                                         <legend>Company:</legend>
                                         <div>
-                                            <input type="radio" id="ambetter" value="Ambetter">
+                                            <input type="radio" id="ambetter" value="Ambetter" v-model="company">
                                             <label for="ambetter">Ambetter</label>
                                         </div>
                                         <div>
-                                            <input type="radio" id="brighthealth" value="Bright Health" required>
+                                            <input type="radio" id="brighthealth" value="Bright Health" v-model="company">
                                             <label for="brighthealth">Bright Health</label>
                                         </div>
                                         <div>
-                                            <input type="radio" id="oscar" value="Oscar Insurance" required>
+                                            <input type="radio" id="oscar" value="Oscar Insurance" v-model="company">
                                             <label for="oscar">Oscar</label>
                                         </div>
                                     </fieldset>
                                 </div>
                                 <div>
                                     <label for="premium">Monthly Premium:</label>
-                                    <input type="text" id="premium" v-model="formValues.premium" required>
+                                    <input type="text" id="premium" v-model="premium" required>
                                 </div>
                                 <div>
                                     <label for="total">Total Owed:</label>
-                                    <input type="text" id="total" v-model="formValues.total">
+                                    <input type="text" id="total" v-model="total">
                                 </div>
                                 <div>
                                     <label for="paid">Paid?</label>
-                                    <input type="checkbox" id="paid" v-model="formValues.paid">
+                                    <input type="checkbox" id="paid" v-model="paid">
                                 </div>
                                 <div id="isPaid">
                                     <label for="autopay">Autopay?</label>
-                                    <input type="checkbox" id="autopay" v-model="formValues.autopay">
+                                    <input type="checkbox" id="autopay" v-model="autopay">
                                 </div>
                                 <div id="isNotPaid">
                                     <label for="validPayment">Was payment Valid?</label>
-                                    <input type="checkbox" id="validPayment" v-model="formValues.validPayment">
+                                    <input type="checkbox" id="validPayment" v-model="validPayment">
                                 </div>
                             </section>
                             <button type="submit" id="submitButton">Submit</button>
@@ -131,23 +131,25 @@
                     </div>
                     <div class="half">
                         <h2>Copy & Paste</h2>
+                        {{formValues}}
                         <h3>Vietnamese</h3>
-                        <notification v-bind:client-name="formValues" />
-                        <p>Chào ${clientGender} {{clientName}}, ${company} chưa nhận được tiền ${clientGender}, và Thuy Bell không xài được thẻ nhà băng ${clientGender} (nếu ${clientGender} đã cho). Nếu không trả trước khì ngày hạn chót, bảo hiểm của ${clientGender} sẽ bị hủy bỏ.
-                            Mỗi tháng trả: $${premium}.
-                            ${capitalize(clientGender)} nợ: 2 tháng, là $${total}.
-                            Ngày hạn chót: ${dueDate}
-                        Nếu ${clientGender} có câu hỏi hay cần giúp, gọi/nhắn tin Thuy Bell 727-280-4563. Cám ơn!</p>
-                        <button type="button" id="copyVietButton" class="copyButton">Copy Text</button>
-                        <div id="copyViet"></div>
+                        <div id="copyViet">
+                            <viet-notification :form-values="formValues" />
+                        </div>
+                        <button type="button" id="copyVietButton" class="copyButton" v-on:click="copyText">Copy Text</button>
+                        
                         <h3>English</h3>
-                        <p>Hi {{clientName}}, ${company} has not received your premium payments yet, and your payment details (if given to Thuy Bell) are not valid. If you do not pay by the due date, your policy will be cancelled.
-                            Your monthly premium: $${premium}.
-                            You owe: 2 months, or $${total}.
-                            Due by: ${dueDate}
-                        If you have questions or need help please call/text Thuy Bell at 727-280-4563. Thank you!</p>
+                        <div id="copyEng">
+                            <p>
+                                Hi {{clientName}}, {{company}} has not received your premium payments yet, and your payment details (if given to Thuy Bell) are not valid. If you do not pay by the due date, your policy will be cancelled.
+                                <br><br>Your monthly premium: ${{premium}}.
+                                <br>You owe: 2 months, or ${{total}}.
+                                <br>Due by: {{dueDate}}
+                                <br><br>If you have questions or need help please call/text Thuy Bell at 727-280-4563. Thank you!
+                            </p>
+                        </div>
                         <button type="button" id="copyEngButton" class="copyButton">Copy Text</button>
-                        <div id="copyEng"></div>
+                        
                         <h3>Both</h3>
                         <button type="button" id="copyBothButton" class="copyButton">Copy Text</button>
                         <div id="copyBoth"></div>
