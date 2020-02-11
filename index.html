@@ -18,11 +18,11 @@
                                 <fieldset>
                                     <legend>Notification Type:</legend>
                                     <div>
-                                        <input type="radio" id="documents" value="documents" v-model="notifType">
+                                        <input type="radio" id="documents" value="documents" v-model="notifCategory">
                                         <label for="documents">Missing Documents</label>
                                     </div>
                                     <div>
-                                        <input type="radio" id="payment" value="payment" v-model="notifType">
+                                        <input type="radio" id="payment" value="payment" v-model="notifCategory">
                                         <label for="payment">Missing Payment</label>
                                     </div>
                                 </fieldset>
@@ -49,17 +49,17 @@
                                         </fieldset>
                                         <div>
                                             <label for="dueDate">Due Date:</label>
-                                            <input type="date" id="dueDate" v-model="dueDate" value="dueDate" required>
+                                            <input type="date" id="dueDate" v-model="dueDate" required>
                                         </div>
                                     </div>
                                 </fieldset>
                             </section>
                             <!-- MISSING DOCUMENTS FORM SECTION-->
-                            <section id="sectionDocs" v-show="notifType === 'documents'">
+                            <section id="sectionDocs" v-show="notifCategory === 'documents'">
                                 <div>
                                     <!--- TURN INTO TEMPLATE -->
-                                    <fieldset id="member1" class="memberInfo">
-                                        <legend>Missing Member 1:</legend>
+                                    <fieldset v-for="(member, index) in familyMembers" :id="getMemberId(index)" class="memberInfo">
+                                        <legend>Missing Member {{index}}:</legend>
                                         <div>
                                             <label for="member1_name">Name:</label>
                                             <input type="text" name="member1_name" id="member1_name">
@@ -87,7 +87,7 @@
                                 </div>
                             </section>
                             <!-- MISSING PAYMENT FORM SECTION-->
-                            <section id="sectionPayment" v-show="notifType === 'payment'">
+                            <section id="sectionPayment" v-show="notifCategory === 'payment'">
                                 <div>
                                     <fieldset>
                                         <legend>Company:</legend>
@@ -117,12 +117,12 @@
                                     <label for="paid">Paid?</label>
                                     <input type="checkbox" id="paid" v-model="paid">
                                 </div>
-                                <div id="isPaid">
+                                <div id="isPaid" v-show="paid">
                                     <label for="autopay">Autopay?</label>
                                     <input type="checkbox" id="autopay" v-model="autopay">
                                 </div>
-                                <div id="isNotPaid">
-                                    <label for="validPayment">Was payment Valid?</label>
+                                <div id="isNotPaid" v-show="!paid">
+                                    <label for="validPayment">Valid Payment Method?</label>
                                     <input type="checkbox" id="validPayment" v-model="validPayment">
                                 </div>
                             </section>
@@ -131,22 +131,65 @@
                     </div>
                     <div class="half">
                         <h2>Copy & Paste</h2>
-                        {{formValues}}
                         <h3>Vietnamese</h3>
                         <div id="copyViet">
-                            <viet-notification :form-values="formValues" />
+                            <div v-show="notifCategory == 'documents'">
+                                
+                            </div>
+                            <div v-show="notifCategory == 'payment'">
+                                <p v-show="!paid">
+                                    Chào {{clientGender}} {{clientName}}, {{company}} chưa nhận được tiền {{clientGender}}<span v-show="!validPayment">, và Thuy Bell không xài được thẻ nhà băng {{clientGender}} (nếu {{clientGender}} đã cho)</span>. Nếu không trả trước khì ngày hạn chót, bảo hiểm của {{clientGender}} sẽ bị hủy bỏ.
+                                    <br/><br/>Mỗi tháng trả: ${{displayPremium}}.
+                                    <br/>{{capitalize(clientGender)}} nợ: 2 tháng, là ${{displayTotal}}.
+                                    <br/>Ngày hạn chót: {{displayDueDate}}
+                                    <span v-show="validPayment">
+                                        <br/><br/>Nếu {{clientGender}} có muốn Thuy Bell trả bằng thẻ nhà băng {{clientGender}} đã cho, trả lời "YES", hay gọi/nhắn tin Thuy Bell 727-280-4563. Cám ơn!.
+                                    </span>
+                                    <span v-show="!validPayment">
+                                        <br/><br/>Nếu {{clientGender}} có câu hỏi hay cần giúp, gọi/nhắn tin Thuy Bell 727-280-4563. Cám ơn!
+                                    </span>
+                                </p>
+                                <p v-show="paid">
+                                    Chào {{clientGender}} {{clientName}}, Thuy Bell đã trả tiền còn nợ (${{displayTotal}}) cho {{company}} bằng thẻ nhà băng {{clientGender}} đã cho.
+                                    <span v-show="autopay">
+                                        {{capitalize(clientGender)}} có Autopay, là tự động rút ${{displayPremium}} mỗi tháng. Nếu cần thay đổi gì hay bỏ hủy Autopay, thông báo Thuy liền cho tránh phí tiềm năng và mất bảo hiểm. Nếu {{clientGender}} có câu hỏi gọi/tin nhắn Thuy Bell 727-280-4563. Cám ơn!
+                                    </span>
+                                    <span v-show="!autopay">
+                                        Mỗi tháng {{clientGender}} sẽ nhận thư cho ${{displayPremium}}. {{capitalize(clientGender)}} có trách nhiệm tự trả. Nếu {{clientGender}} muốn Autopay (tự động trả) hay có câu hỏi, gọi/tin nhắn Thuy Bell 727-280-4563. Cám ơn!
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                         <button type="button" id="copyVietButton" class="copyButton" v-on:click="copyText">Copy Text</button>
                         
                         <h3>English</h3>
                         <div id="copyEng">
-                            <p>
-                                Hi {{clientName}}, {{company}} has not received your premium payments yet, and your payment details (if given to Thuy Bell) are not valid. If you do not pay by the due date, your policy will be cancelled.
-                                <br><br>Your monthly premium: ${{premium}}.
-                                <br>You owe: 2 months, or ${{total}}.
-                                <br>Due by: {{dueDate}}
-                                <br><br>If you have questions or need help please call/text Thuy Bell at 727-280-4563. Thank you!
-                            </p>
+                            <div v-show="notifCategory == 'documents'">
+                                
+                            </div>
+                            <div v-show="notifCategory == 'payment'">
+                                <p v-show="!paid">
+                                    Hi {{clientName}}, {{company}} has not received your premium payments yet<span v-show="!validPayment">, and your payment details (if given to Thuy Bell) are not valid</span>. If you do not pay by the due date, your policy will be cancelled.
+                                    <br/><br/>Your monthly premium: ${{displayPremium}}.
+                                    <br/>You owe: 2 months, or ${{displayTotal}}.
+                                    <br/>Due by: {{displayDueDate}}
+                                    <span v-show="validPayment">
+                                        <br/><br/>**If you would like Thuy Bell to pay using your saved payment details, reply "YES" or call/text Thuy at 727-280-4563. Thank you!
+                                    </span>
+                                    <span v-show="!validPayment">
+                                        <br/><br/>If you have questions or need help please call/text Thuy Bell at 727-280-4563. Thank you!
+                                    </span>
+                                </p>
+                                <p v-show="paid">
+                                    Hi {{clientName}}, Thuy Bell has paid your owed premiums (${{displayTotal}}) to {{company}} with the card details you provided us.
+                                    <span v-show="autopay">
+                                        We setup Autopay for you, which automatically charges your card ${{displayPremium}} every month. If you need to make changes or cancel Autopay, notify Thuy immediately to avoid potential fees and loss of insurance. If you have any questions, please call/text Thuy Bell at 727-280-4563. Thank you!`
+                                    </span>
+                                    <span v-show="!autopay">
+                                        You are responsible for future bills of ${{displayPremium}} each month, which will arrive by mail. If you want to setup Autopay or have any questions, please call/text Thuy Bell at 727-280-4563. Thank you!
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                         <button type="button" id="copyEngButton" class="copyButton">Copy Text</button>
                         
