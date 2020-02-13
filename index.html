@@ -13,7 +13,7 @@
                 <div class="halfBox">
                     <div class="half">
                         <h2>Form</h2>
-                        <form id="notifForm">
+                        <form id="notifForm" v-on:submit.prevent>
                             <div>
                                 <fieldset>
                                     <legend>Notification Type:</legend>
@@ -56,35 +56,11 @@
                             </section>
                             <!-- MISSING DOCUMENTS FORM SECTION-->
                             <section id="sectionDocs" v-show="notifCategory === 'documents'">
-                                <div>
+                                <div class="flex">
                                     <!--- TURN INTO TEMPLATE -->
-                                    <fieldset v-for="(member, index) in familyMembers" :id="getMemberId(index)" class="memberInfo">
-                                        <legend>Missing Member {{index}}:</legend>
-                                        <div>
-                                            <label for="member1_name">Name:</label>
-                                            <input type="text" name="member1_name" id="member1_name">
-                                        </div>
-                                        <fieldset>
-                                            <legend>Documents:</legend>
-                                            <div>
-                                                <input name="member1_docs" type="checkbox" id="member1_income" value="income"><label for="member1_income">Income</label>
-                                            </div>
-                                            <div>
-                                                <input name="member1_docs" type="checkbox" id="member1_ssn" value="SSN"><label for="member1_ssn">SSN</label>
-                                            </div>
-                                            <div>
-                                                <input name="member1_docs" type="checkbox" id="member1_citizenship" value="Naturalization Certificate"><label for="member1_citizenship">Naturalization Certificate</label>
-                                            </div>
-                                            <div>
-                                                <input name="member1_docs" type="checkbox" id="member1_greencard" value="greencard"><label for="member1_greencard">Greencard</label>
-                                            </div>
-                                            <div>
-                                                <input name="member1_docs" type="checkbox" id="member1_letter" value="health coverage letter"><label for="member1_letter">Health Coverage Letter</label>
-                                            </div>
-                                        </fieldset>
-                                    </fieldset>
-                                    <button type="button" id="addMemberButton">+ Add Member</button>
+                                    <family-member v-for="member in familyMembers" :member="member" :key="member.memberId" v-on:remove="removeFamilyMember($event)"></family-member>
                                 </div>
+                                <button type="button" id="addMemberButton" v-on:click="addFamilyMember">+ Add Member</button>
                             </section>
                             <!-- MISSING PAYMENT FORM SECTION-->
                             <section id="sectionPayment" v-show="notifCategory === 'payment'">
@@ -126,7 +102,7 @@
                                     <input type="checkbox" id="validPayment" v-model="validPayment">
                                 </div>
                             </section>
-                            <button type="submit" id="submitButton">Submit</button>
+                            <button type="button" v-on:click="resetForm">Reset</button>
                         </form>
                     </div>
                     <div class="half">
@@ -134,7 +110,13 @@
                         <h3>Vietnamese</h3>
                         <div id="copyViet">
                             <div v-show="notifCategory == 'documents'">
-                                
+                                Chào {{clientGender}} {{clientName}}, Obamacare của {{clientGender}} cần bổ sung thêm giấy tờ. Làm ơn nhắn tin hình
+                                <span v-for="(member, index) in familyMembers">
+                                    <span v-if="familyMembers.length > 1"><br/>{{index + 1}}) </span>
+                                    {{filterReqDocs(member.req_docs, 'VN')}} của
+                                    <span v-if="familyMembers.length == 1 && familyMembers[0].name == ''">{{clientGender}}</span>
+                                    <span v-else>{{member.name}}<span v-if="index < familyMembers.length-1">; </span></span>
+                                </span>. </br></br>Nếu không gửi trước khì {{displayDueDate}}, giá bảo hiểm của {{clientGender}} sẽ tăng lên. Liên lạc Thuy Bell 727-280-4563. Cám ơn!
                             </div>
                             <div v-show="notifCategory == 'payment'">
                                 <p v-show="!paid">
@@ -160,47 +142,50 @@
                                 </p>
                             </div>
                         </div>
-                        <button type="button" id="copyVietButton" class="copyButton" v-on:click="copyText">Copy Text</button>
-                        
+                        <button type="submit" form="notifForm" class="copyButton" v-on:click="copyText(['copyViet'], $event)">Copy Viet</button>
                         <h3>English</h3>
                         <div id="copyEng">
                             <div v-show="notifCategory == 'documents'">
-                                
+                                Hi {{clientName}}, we need more documents to verify your Obamacare. Please send us photos of
+                                <span v-for="(member, index) in familyMembers">
+                                    <span v-if="familyMembers.length > 1"><br/>{{index + 1}}) </span>
+                                    <span v-if="familyMembers.length == 1 && familyMembers[0].name == ''">your</span>
+                                    <span v-else>{{member.name}}'s </span>
+                                    {{filterReqDocs(member.req_docs, 'EN')}}<span v-if="index < familyMembers.length-1">; </span><span v-else>.</span></span>
+                                    </br></br>If not sent before {{displayDueDate}}, your premium will increase. Contact Thuy Bell at 727-280-4563. Thank you!
+                                </div>
+                                <div v-show="notifCategory == 'payment'">
+                                    <p v-show="!paid">
+                                        Hi {{clientName}}, {{company}} has not received your premium payments yet<span v-show="!validPayment">, and your payment details (if given to Thuy Bell) are not valid</span>. If you do not pay by the due date, your policy will be cancelled.
+                                        <br/><br/>Your monthly premium: ${{displayPremium}}.
+                                        <br/>You owe: 2 months, or ${{displayTotal}}.
+                                        <br/>Due by: {{displayDueDate}}
+                                        <span v-show="validPayment">
+                                            <br/><br/>**If you would like Thuy Bell to pay using your saved payment details, reply "YES" or call/text Thuy at 727-280-4563. Thank you!
+                                        </span>
+                                        <span v-show="!validPayment">
+                                            <br/><br/>If you have questions or need help please call/text Thuy Bell at 727-280-4563. Thank you!
+                                        </span>
+                                    </p>
+                                    <p v-show="paid">
+                                        Hi {{clientName}}, Thuy Bell has paid your owed premiums (${{displayTotal}}) to {{company}} with the card details you provided us.
+                                        <span v-show="autopay">
+                                            We setup Autopay for you, which automatically charges your card ${{displayPremium}} every month. If you need to make changes or cancel Autopay, notify Thuy immediately to avoid potential fees and loss of insurance. If you have any questions, please call/text Thuy Bell at 727-280-4563. Thank you!`
+                                        </span>
+                                        <span v-show="!autopay">
+                                            You are responsible for future bills of ${{displayPremium}} each month, which will arrive by mail. If you want to setup Autopay or have any questions, please call/text Thuy Bell at 727-280-4563. Thank you!
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
-                            <div v-show="notifCategory == 'payment'">
-                                <p v-show="!paid">
-                                    Hi {{clientName}}, {{company}} has not received your premium payments yet<span v-show="!validPayment">, and your payment details (if given to Thuy Bell) are not valid</span>. If you do not pay by the due date, your policy will be cancelled.
-                                    <br/><br/>Your monthly premium: ${{displayPremium}}.
-                                    <br/>You owe: 2 months, or ${{displayTotal}}.
-                                    <br/>Due by: {{displayDueDate}}
-                                    <span v-show="validPayment">
-                                        <br/><br/>**If you would like Thuy Bell to pay using your saved payment details, reply "YES" or call/text Thuy at 727-280-4563. Thank you!
-                                    </span>
-                                    <span v-show="!validPayment">
-                                        <br/><br/>If you have questions or need help please call/text Thuy Bell at 727-280-4563. Thank you!
-                                    </span>
-                                </p>
-                                <p v-show="paid">
-                                    Hi {{clientName}}, Thuy Bell has paid your owed premiums (${{displayTotal}}) to {{company}} with the card details you provided us.
-                                    <span v-show="autopay">
-                                        We setup Autopay for you, which automatically charges your card ${{displayPremium}} every month. If you need to make changes or cancel Autopay, notify Thuy immediately to avoid potential fees and loss of insurance. If you have any questions, please call/text Thuy Bell at 727-280-4563. Thank you!`
-                                    </span>
-                                    <span v-show="!autopay">
-                                        You are responsible for future bills of ${{displayPremium}} each month, which will arrive by mail. If you want to setup Autopay or have any questions, please call/text Thuy Bell at 727-280-4563. Thank you!
-                                    </span>
-                                </p>
-                            </div>
+                            <button type="submit" form="notifForm" class="copyButton" v-on:click="copyText(['copyEng'], $event)">Copy Eng</button>
+                            <h3>Both</h3>
+                            <button type="submit" form="notifForm" class="copyButton" v-on:click="copyText(['copyViet', 'copyEng'], $event)">Copy Both</button>
                         </div>
-                        <button type="button" id="copyEngButton" class="copyButton">Copy Text</button>
-                        
-                        <h3>Both</h3>
-                        <button type="button" id="copyBothButton" class="copyButton">Copy Text</button>
-                        <div id="copyBoth"></div>
                     </div>
                 </div>
-            </div>
-        </main>
-        <script src="vue.js"></script>
-        <script src="components.js"></script>
-    </body>
-</html>
+            </main>
+            <script src="vue.js"></script>
+            <script src="components.js"></script>
+        </body>
+    </html>

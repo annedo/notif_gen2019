@@ -54,3 +54,17 @@ textarea {
 .copyButton {
     margin-bottom: 0.5rem;
 }
+
+#sectionDocs .flex {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0 -0.75rem;
+}
+
+#sectionDocs .flex > fieldset {
+    margin: 0.75rem;
+}
+
+#addMemberButton {
+    margin-bottom: 0.75rem;
+}

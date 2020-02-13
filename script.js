@@ -144,7 +144,7 @@ function copyText(event) {
 function generateNotif() {
     var translation = {
         "income": "income",
-        "SSN": "SSN",
+        "SSN": "thẻ SSN",
         "Naturalization Certificate": "giấy quốc tịch",
         "greencard": "thẻ xanh",
         "health coverage letter": "health coverage letter"

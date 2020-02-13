@@ -1,3 +1,56 @@
+Vue.component('family-member', {
+    props: {
+        member: Object
+    },
+    methods: {
+        createLabel: function(labelBase) { 
+            var label = labelBase.replace(/\s/, '')
+            return `${this.member.memberId}_${label}`
+        },
+        checkRequired: function(event) {
+            var checkboxes = document.getElementsByClassName(event.target.className)
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    this.removeRequired(checkboxes);
+                    return false;
+                }
+                else {
+                    checkboxes[i].setAttribute('required', '');
+                }
+            }
+            return true;
+        },
+        removeRequired: function(checkboxes) {
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].removeAttribute('required');
+            }
+        }
+    },
+    template:`
+    <fieldset :id="member.memberId" class="memberInfo">
+        <legend>Missing Member {{member.memberIndex}}:</legend>
+        <div>
+            <label :for="createLabel('name')">Name:</label>
+            <input type="text" :id="createLabel('name')" :required="member.memberIndex != 1" v-model="member.name"/>
+        </div>
+        <fieldset>
+            <legend>Documents:</legend>
+            <div v-for="(value, req) in member.req_docs">
+                <input type="checkbox" 
+                       :id="createLabel(req)" 
+                       :class="createLabel('checkbox')"
+                       :value="req" 
+                       v-model="member.req_docs[req]"
+                       required 
+                       v-on:change="checkRequired($event)"/>
+                <label :for="createLabel(req)">{{req}}</label>
+            </div>
+        </fieldset>
+        <button v-if="member.memberIndex != 1" type="button" v-on:click="$emit('remove', member.memberIndex)">x Remove Member</button>  
+    </fieldset>
+    `
+});
+
 var app = new Vue({
     el: '#app',
     data: {
@@ -10,17 +63,29 @@ var app = new Vue({
         company: 'Ambetter',
         premium: '5',
         total: '',
-        dueDate: new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).toISOString().substring(0,10),
-        familyMembers: [{ 
+        dueDate: '',
+        familyMembers: [{
             name: '',
-            req_income: false,
-            req_ssn: false,
-            req_citizenship: false,
-            req_greencard: false,
-            req_letter: false
+            memberIndex: 1,
+            memberId: 'member1',
+            req_docs: {
+                'income': false,
+                'SSN (signed)': false,
+                'Naturalization Certificate': false,
+                'Greencard (front and back)': false,
+                'Health Coverage Letter': false
+            }
         }]
     },
+    mounted: function() {
+        this.dueDate = this.defaultDueDate
+    },
     computed: {
+        defaultDueDate: function() {
+            var today = new Date();
+            var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).toISOString().substring(0,10);
+            return lastDayOfMonth;
+        },
         displayDueDate: function() {
             var displayDate = new Date(this.dueDate).toLocaleDateString('en-us', {timeZone: 'UTC'});
 
@@ -39,25 +104,114 @@ var app = new Vue({
         },
     },
     methods: {
+        addFamilyMember: function() {
+            var memberIndex = this.familyMembers.length + 1;
+            this.familyMembers.push({
+                name: '',
+                memberIndex: memberIndex,
+                memberId: `member${memberIndex}`,
+                req_docs: {
+                    'income': false,
+                    'SSN (signed)': false,
+                    'Naturalization Certificate': false,
+                    'Greencard (front and back)': false,
+                    'Health Coverage Letter': false
+                }
+            });
+            document.getElementById('member1_name').setAttribute('required', '');
+        },
+        removeFamilyMember: function(memberIndex) {
+            // memberIndex = index + 1 so people don't read "Member 0"
+            this.familyMembers.splice(memberIndex - 1, 1);
+            // Reset index numbering
+            for (var i = 0; i < this.familyMembers.length; i++) {
+                this.familyMembers[i].memberIndex = i+1;
+                this.familyMembers[i].memberId =  `member${i + 1}`;
+            }
+            if (this.familyMembers.length == 1) {
+                document.getElementById('member1_name').removeAttribute('required');
+            }
+        },
         normalizeDollars: function(str) {
             return parseFloat(str.replace(/\$/, "")).toFixed(2);
         },
         capitalize: function(str) {
             return str[0].toUpperCase() + str.slice(1);
         },
-        copyText: function(event) {
+        copyText: function(copyIdList, event) {
             let button = event.target;
-            let textId = button.id.replace("Button", "");
+            let form = document.getElementById(button.getAttribute('form'));
+            if (form.checkValidity() == false) {
+                button.click()
+                return;
+            }
+            else {
+                var text = [];
+                for (var i = 0; i < copyIdList.length; i++) {
+                    text.push(document.getElementById(copyIdList[i]).innerText);
+                }
+                console.log(printText);
+                var printText = text.join('\n---\n\n')
+                let tempInput = document.createElement("textarea")
+                tempInput.value = printText;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+            }
+            /*let textId = button.id.replace("Button", "");
             let text = document.getElementById(textId).innerText;
             let tempInput = document.createElement("textarea")
             tempInput.value = text;
             document.body.appendChild(tempInput);
             tempInput.select();
             document.execCommand("copy");
-            document.body.removeChild(tempInput);
+            document.body.removeChild(tempInput);*/
         },
-        getMemberId: function(index) {
-            return `member${index}`;
+        filterReqDocs: function(docsObj, language="EN") {
+            var translation = {
+                "income": "income",
+                "SSN (signed)": "thẻ SSN (ký tên)",
+                "Naturalization Certificate": "giấy quốc tịch",
+                "Greencard (front and back)": "thẻ xanh (trước và sau)",
+                "Health Coverage Letter": "Health Coverage Letter"
+            }
+            var reqDocs = [];
+            for (doc in docsObj) {
+                if (docsObj[doc] === true) {
+                    if (language == 'VN') {
+                        reqDocs.push(translation[doc]);
+                    }
+                    else {
+                        reqDocs.push(doc)
+                    }
+                }
+            }
+            return reqDocs.join(', ');
+        },
+        resetForm: function() {
+            this.notifCategory = 'documents';
+            this.paid = false;
+            this.autopay = false;
+            this.validPayment = false;
+            this.clientName = '';
+            this.clientGender = 'chị';
+            this.company = 'Ambetter';
+            this.premium = '5';
+            this.total = '';
+            this.dueDate = this.defaultDueDate;
+            this.familyMembers = [{
+                name: '',
+                memberIndex: 1,
+                memberId: 'member1',
+                req_docs: {
+                    'income': false,
+                    'SSN (signed)': false,
+                    'Naturalization Certificate': false,
+                    'Greencard (front and back)': false,
+                    'Health Coverage Letter': false
+                }
+            }]
         }
     }
 })
