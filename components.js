@@ -4,7 +4,7 @@ Vue.component('family-member', {
     },
     methods: {
         createLabel: function(labelBase) { 
-            var label = labelBase.replace(/\s/, '')
+            var label = labelBase.replace(/[^A-Za-z0-9_:.-]/g, '')
             return `${this.member.memberId}_${label}`
         },
         checkRequired: function(event) {
@@ -41,15 +41,57 @@ Vue.component('family-member', {
                        :class="createLabel('checkbox')"
                        :value="req" 
                        v-model="member.req_docs[req]"
-                       required 
+                       :required="$root.notifCategory === 'documents'"
                        v-on:change="checkRequired($event)"/>
                 <label :for="createLabel(req)">{{req}}</label>
+            </div>
+            <div>
+                <input type="checkbox"
+                       :id="createLabel('custom_docs')"
+                       :class="createLabel('checkbox')"
+                       :value="false"
+                       v-model="member.custom_docs"
+                       :required="$root.notifCategory === 'documents'"
+                       v-on:change="checkRequired($event)" />
+                <label :for="createLabel('custom_docs')">Other</label>
+            </div>
+            <div v-show="member.custom_docs">
+                <label :for="createLabel('other_en')">English:</label>
+                <input type="text"
+                       :id="createLabel('other_en')"
+                       v-model="member.custom_values.en" />
+            </div>
+            <div v-show="member.custom_docs">
+                <label :for="createLabel('other_vn')">Vietnamese:</label>
+                <input type="text"
+                       :id="createLabel('other_vn')"
+                       v-model="member.custom_values.vn" />
             </div>
         </fieldset>
         <button v-if="member.memberIndex != 1" type="button" v-on:click="$emit('remove', member.memberIndex)">x Remove Member</button>  
     </fieldset>
     `
 });
+
+function defaultFamilyMember(memberIndex = 1) {
+    return {
+        name: '',
+        memberIndex: memberIndex,
+        memberId: `member${memberIndex}`,
+        req_docs: {
+            'income': false,
+            'SSN (signed)': false,
+            'Naturalization Certificate': false,
+            'Greencard (front and back)': false,
+            'Health Coverage Letter': false,
+        },
+        custom_docs: false,
+        custom_values: {
+            vn: '',
+            en: ''
+        }
+    }
+}
 
 var app = new Vue({
     el: '#app',
@@ -64,18 +106,10 @@ var app = new Vue({
         premium: '5',
         total: '',
         dueDate: '',
-        familyMembers: [{
-            name: '',
-            memberIndex: 1,
-            memberId: 'member1',
-            req_docs: {
-                'income': false,
-                'SSN (signed)': false,
-                'Naturalization Certificate': false,
-                'Greencard (front and back)': false,
-                'Health Coverage Letter': false
-            }
-        }]
+        newdocsName: '',
+        newdocsGender: 'chị',
+        newdocsSsn: true,
+        familyMembers: [defaultFamilyMember()]
     },
     mounted: function() {
         this.dueDate = this.defaultDueDate
@@ -106,18 +140,7 @@ var app = new Vue({
     methods: {
         addFamilyMember: function() {
             var memberIndex = this.familyMembers.length + 1;
-            this.familyMembers.push({
-                name: '',
-                memberIndex: memberIndex,
-                memberId: `member${memberIndex}`,
-                req_docs: {
-                    'income': false,
-                    'SSN (signed)': false,
-                    'Naturalization Certificate': false,
-                    'Greencard (front and back)': false,
-                    'Health Coverage Letter': false
-                }
-            });
+            this.familyMembers.push(defaultFamilyMember(memberIndex));
             document.getElementById('member1_name').setAttribute('required', '');
         },
         removeFamilyMember: function(memberIndex) {
@@ -168,7 +191,7 @@ var app = new Vue({
             document.execCommand("copy");
             document.body.removeChild(tempInput);*/
         },
-        filterReqDocs: function(docsObj, language="EN") {
+        filterReqDocs: function(memberObj, language="EN") {
             var translation = {
                 "income": "income",
                 "SSN (signed)": "thẻ SSN (ký tên)",
@@ -177,14 +200,22 @@ var app = new Vue({
                 "Health Coverage Letter": "Health Coverage Letter"
             }
             var reqDocs = [];
-            for (doc in docsObj) {
-                if (docsObj[doc] === true) {
+            for (doc in memberObj.req_docs) {
+                if (memberObj.req_docs[doc] === true) {
                     if (language == 'VN') {
                         reqDocs.push(translation[doc]);
                     }
                     else {
                         reqDocs.push(doc)
                     }
+                }
+            }
+            if (memberObj.custom_docs) {
+                if (language == 'VN') {
+                    reqDocs.push(memberObj.custom_values.vn);
+                }
+                else {
+                    reqDocs.push(memberObj.custom_values.en)
                 }
             }
             return reqDocs.join(', ');
@@ -200,18 +231,8 @@ var app = new Vue({
             this.premium = '5';
             this.total = '';
             this.dueDate = this.defaultDueDate;
-            this.familyMembers = [{
-                name: '',
-                memberIndex: 1,
-                memberId: 'member1',
-                req_docs: {
-                    'income': false,
-                    'SSN (signed)': false,
-                    'Naturalization Certificate': false,
-                    'Greencard (front and back)': false,
-                    'Health Coverage Letter': false
-                }
-            }]
+            this.familyMembers = [defaultFamilyMember()]
+            document.getElementById('member1_name').removeAttribute('required')
         }
     }
 })
