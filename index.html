@@ -83,6 +83,10 @@
                                             <input type="checkbox" id="newdocs_ssn" value="ssn" v-model="newdocsSsn">
                                             <label for="newdocs_ssn">SSN - valid for work only</label>
                                         </div>
+                                        <div>
+                                            <input type="checkbox" id="newdocs_income" value="ssn" v-model="newdocsIncome">
+                                            <label for="newdocs_income">Income</label>
+                                        </div>
                                     </fieldset>
                                 </fieldset>
                             </section>
@@ -145,6 +149,9 @@
                                 <span v-if="newdocsSsn">
                                     Thẻ SSN của <span v-if="newdocsName == ''">{{clientGender}}</span><span v-else>{{newdocsName}}</span> có câu "Valid for work only" nên họ sẽ không chấp nhận. <span v-if="newdocsName == ''">{{capitalize(clientGender)}}</span><span v-else>{{capitalize(newdocsGender)}} {{newdocsName}}</span> có khai thuế hay nhận W-2 không?
                                 </span>
+                                <span v-if="newdocsIncome">
+                                    Lam ơn gửi giấy khai thuế năm nay, W-2, hay 1099.
+                                </span>
                                 <br/><br/>Nếu không gửi trước khì {{displayDueDate}}, giá bảo hiểm của {{clientGender}} sẽ tăng lên. Liên lạc Thuy Bell 727-280-4563. Cám ơn!
                             </div>
                             <div v-show="notifCategory == 'documents'">
@@ -187,6 +194,9 @@
                                 Hi {{clientName}}, we need more documents to verify your Obamacare.
                                 <span v-if="newdocsSsn">
                                     <span v-if="newdocsName == ''">Your</span><span v-else>{{newdocsName}}'s</span> SSN card has the phrase "Valid for work only" so it has not been accepted. Please send us other documents containing the SSN and <span v-if="newdocsName == ''">your</span><span v-else>{{newdocsName}}'s</span> full name, such as a tax return or W-2.
+                                </span>
+                                <span v-if="newdocsIncome">
+                                    Please send your most recent tax returns, W-2, or 1099s.
                                 </span>
                                 <br/><br/>If not sent before {{displayDueDate}}, your premium will increase. Contact Thuy Bell at 727-280-4563. Thank you!
                             </div>

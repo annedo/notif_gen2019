@@ -108,7 +108,8 @@ var app = new Vue({
         dueDate: '',
         newdocsName: '',
         newdocsGender: 'chị',
-        newdocsSsn: true,
+        newdocsSsn: false,
+        newdocsIncome: false,
         familyMembers: [defaultFamilyMember()]
     },
     mounted: function() {
