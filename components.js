@@ -96,7 +96,7 @@ function defaultFamilyMember(memberIndex = 1) {
 var app = new Vue({
     el: '#app',
     data: {
-        notifCategory: 'documents',
+        notifCategory: 'initialapp',
         paid: false,
         autopay: false,
         validPayment: false,
@@ -222,7 +222,7 @@ var app = new Vue({
             return reqDocs.join(', ');
         },
         resetForm: function() {
-            this.notifCategory = 'documents';
+            this.notifCategory = 'initialapp';
             this.paid = false;
             this.autopay = false;
             this.validPayment = false;

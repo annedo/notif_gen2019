@@ -18,6 +18,10 @@
                                 <fieldset>
                                     <legend>Notification Type:</legend>
                                     <div>
+                                        <input type="radio" id="initialapp" value="initialapp" v-model="notifCategory">
+                                        <label for="initialapp">Initial Application</label>
+                                    </div>
+                                    <div>
                                         <input type="radio" id="newdocs" value="newdocs" v-model="notifCategory">
                                         <label for="newdocs">Need New Documents</label>
                                     </div>
@@ -90,7 +94,7 @@
                                     </fieldset>
                                 </fieldset>
                             </section>
-                            <section id="sectionDocs" v-show="notifCategory === 'documents'">
+                            <section id="sectionDocs" v-show="notifCategory === 'documents' || notifCategory === 'initialapp'">
                                 <div class="flex">
                                     <!--- TURN INTO TEMPLATE -->
                                     <family-member v-for="member in familyMembers" :member="member" :key="member.memberId" v-on:remove="removeFamilyMember($event)"></family-member>
@@ -98,7 +102,7 @@
                                 <button type="button" id="addMemberButton" v-on:click="addFamilyMember">+ Add Member</button>
                             </section>
                             <!-- MISSING PAYMENT FORM SECTION-->
-                            <section id="sectionPayment" v-show="notifCategory === 'payment'">
+                            <section id="sectionPayment" v-show="notifCategory === 'payment' || notifCategory === 'initialapp'">
                                 <div>
                                     <fieldset>
                                         <legend>Company:</legend>
@@ -144,6 +148,39 @@
                         <h2>Copy & Paste</h2>
                         <h3>Vietnamese</h3>
                         <div id="copyViet">
+                            <div v-show="notifCategory == 'initialapp'">
+                                <p>Chào {{clientGender}} {{clientName}}, Thuy Bell đã chọn bảo hiểm của {{clientGender}} cho năm 2021. Mỗi tháng trả ${{displayPremium}} cho {{company}}.</p>
+                                <p v-show="!paid">
+                                    {{company}} sẽ gửi thư cho {{clientGender}} trả tiền.
+                                    <span v-show="!validPayment">
+                                        Nếu {{clientGender}} muốn trả trên mạng gọi/tin nhắn Thuy Bell 727-280-4563.
+                                    </span>
+                                    <span v-show="validPayment">
+                                        **Nếu {{clientGender}} có muốn Thuy Bell trả bằng thẻ nhà băng {{clientGender}} đã cho, trả lời "YES", hay gọi/nhắn tin Thuy Bell 727-280-4563.
+                                    </span>
+                                </p>
+                                <p v-show="paid">
+                                    {{capitalize(clientGender)}} đã trả tiền cho tháng đầu tiên (${{displayPremium}}) cho {{company}} bằng thẻ nhà băng {{clientGender}} đã cho.
+                                    <span v-show="autopay">
+                                        {{capitalize(clientGender)}} có Autopay, là tự động rút ${{displayPremium}} mỗi tháng.
+                                    </span>
+                                    <span v-show="!autopay">
+                                        Mỗi tháng {{clientGender}} sẽ nhận thư cho ${{displayPremium}}. {{capitalize(clientGender)}} có trách nhiệm tự trả.
+                                    </span>
+                                </p>
+                                <p v-show="Object.values(familyMembers[0].req_docs).includes(true)">
+                                    QUAN TRỌNG: Để giữ giá nầy, bạn phải nhắn tin trước {{displayDueDate}} hình
+                                    <span v-for="(member, index) in familyMembers">
+                                        <span v-if="familyMembers.length > 1"><br/>{{index + 1}}) </span>
+                                        {{filterReqDocs(member, 'VN')}} của
+                                        <span v-if="familyMembers.length == 1 && familyMembers[0].name == ''">{{clientGender}}</span>
+                                        <span v-else>{{member.name}}<span v-if="index < familyMembers.length-1">; </span></span>
+                                    </span>.
+                                </p>
+                                <p>
+                                    - Thuy Bell 727-280-4563
+                                </p>
+                            </div>
                             <div v-show="notifCategory == 'newdocs'">
                                 Chào {{clientGender}} {{clientName}}, Obamacare của {{clientGender}} cần bổ sung thêm giấy tờ.
                                 <span v-if="newdocsSsn">
@@ -190,6 +227,39 @@
                         <button type="submit" form="notifForm" class="copyButton" v-on:click="copyText(['copyViet'], $event)">Copy Viet</button>
                         <h3>English</h3>
                         <div id="copyEng">
+                            <div v-show="notifCategory == 'initialapp'">
+                                <p>Hi {{clientName}}, Thuy Bell has selected your new Obamacare plan for 2021. Your plan is with {{company}} and costs ${{displayPremium}} per month.</p>
+                                <p v-show="!paid">
+                                    {{company}} will send you a bill in the mail soon.
+                                    <span v-show="!validPayment">
+                                        If you would like to pay online, please call or text Thuy at 727-280-4563.
+                                    </span>
+                                    <span v-show="validPayment">
+                                        **If you would like Thuy Bell to pay using your saved payment details, reply "YES" or call/text Thuy at 727-280-4563.
+                                    </span>
+                                </p>
+                                <p v-show="paid">
+                                    Your first month's bill (${{displayPremium}}) has been paid to {{company}} with the card details you provided us.
+                                    <span v-show="autopay">
+                                        We setup Autopay for you, which automatically charges your card ${{displayPremium}} every month.
+                                    </span>
+                                    <span v-show="!autopay">
+                                        You are responsible for future bills of ${{displayPremium}} each month, which will arrive by mail.
+                                    </span>
+                                </p>
+                                <p v-show="Object.values(familyMembers[0].req_docs).includes(true)">
+                                    IMPORTANT: To keep your tax credit you must send us photos before {{displayDueDate}} of
+                                    <span v-for="(member, index) in familyMembers">
+                                        <span v-if="familyMembers.length > 1"><br/>{{index + 1}}) </span>
+                                        <span v-if="familyMembers.length == 1 && familyMembers[0].name == ''">your</span>
+                                        <span v-else>{{member.name}}'s </span>
+                                        {{filterReqDocs(member, 'EN')}}<span v-if="index < familyMembers.length-1">; </span><span v-else>.</span>
+                                    </span>
+                                </p>
+                                <p>
+                                    - Thuy Bell 727-280-4563
+                                </p>
+                            </div>
                             <div v-show="notifCategory == 'newdocs'">
                                 Hi {{clientName}}, we need more documents to verify your Obamacare.
                                 <span v-if="newdocsSsn">
