@@ -115,6 +115,10 @@
                                             <label for="brighthealth">Bright Health</label>
                                         </div>
                                         <div>
+                                            <input type="radio" id="floridablue" value="Florida Blue" v-model="company">
+                                            <label for="floridablue">Florida Blue</label>
+                                        </div>
+                                        <div>
                                             <input type="radio" id="oscar" value="Oscar Insurance" v-model="company">
                                             <label for="oscar">Oscar</label>
                                         </div>
@@ -151,13 +155,13 @@
                             <div v-show="notifCategory == 'initialapp'">
                                 <p>Chào {{clientGender}} {{clientName}}, Thuy Bell đã chọn bảo hiểm của {{clientGender}} cho năm 2021. Mỗi tháng trả ${{displayPremium}} cho {{company}}.</p>
                                 <p v-show="!paid">
-                                    {{company}} sẽ gửi thư cho {{clientGender}} trả tiền.
-                                    <span v-show="!validPayment">
+                                    {{company}} sẽ gửi thư cho {{clientGender}} trả tiền. Nếu {{clientGender}} có câu hỏi gọi/nhắn tin Thuy Bell 727-280-4563. Cám ơn!
+                                    <!--<span v-show="!validPayment">
                                         Nếu {{clientGender}} muốn trả trên mạng gọi/tin nhắn Thuy Bell 727-280-4563.
                                     </span>
                                     <span v-show="validPayment">
                                         **Nếu {{clientGender}} có muốn Thuy Bell trả bằng thẻ nhà băng {{clientGender}} đã cho, trả lời "YES", hay gọi/nhắn tin Thuy Bell 727-280-4563.
-                                    </span>
+                                    </span>-->
                                 </p>
                                 <p v-show="paid">
                                     {{capitalize(clientGender)}} đã trả tiền cho tháng đầu tiên (${{displayPremium}}) cho {{company}} bằng thẻ nhà băng {{clientGender}} đã cho.
@@ -228,15 +232,15 @@
                         <h3>English</h3>
                         <div id="copyEng">
                             <div v-show="notifCategory == 'initialapp'">
-                                <p>Hi {{clientName}}, Thuy Bell has selected your new Obamacare plan for 2021. Your plan is with {{company}} and costs ${{displayPremium}} per month.</p>
+                                <p>Hi {{clientName}}, Thuy Bell has selected your new Obamacare plan for 2021. Your {{company}} plan costs ${{displayPremium}} per month.</p>
                                 <p v-show="!paid">
-                                    {{company}} will send you a bill in the mail soon.
-                                    <span v-show="!validPayment">
+                                    {{company}} will send you a bill in the mail soon. For questions call/text Thuy Bell at 727-280-4563. Thank you!
+                                    <!--<span v-show="!validPayment">
                                         If you would like to pay online, please call or text Thuy at 727-280-4563.
                                     </span>
                                     <span v-show="validPayment">
                                         **If you would like Thuy Bell to pay using your saved payment details, reply "YES" or call/text Thuy at 727-280-4563.
-                                    </span>
+                                    </span>-->
                                 </p>
                                 <p v-show="paid">
                                     Your first month's bill (${{displayPremium}}) has been paid to {{company}} with the card details you provided us.

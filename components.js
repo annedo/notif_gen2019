@@ -194,7 +194,7 @@ var app = new Vue({
         },
         filterReqDocs: function(memberObj, language="EN") {
             var translation = {
-                "income": "income",
+                "income": "thu nhập",
                 "SSN (signed)": "thẻ SSN (ký tên)",
                 "Naturalization Certificate": "giấy quốc tịch",
                 "Greencard (front and back)": "thẻ xanh (trước và sau)",
