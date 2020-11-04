@@ -9,16 +9,16 @@ Vue.component('family-member', {
         },
         checkRequired: function(event) {
             var checkboxes = document.getElementsByClassName(event.target.className)
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].checked) {
-                    this.removeRequired(checkboxes);
-                    return false;
-                }
-                else {
-                    checkboxes[i].setAttribute('required', '');
-                }
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked || !event.target.form.documents.checked) {
+                        this.removeRequired(checkboxes);
+                        return false;
+                    }
+                    else {
+                        checkboxes[i].setAttribute('required', '');
+                    }
+                return true;
             }
-            return true;
         },
         removeRequired: function(checkboxes) {
             for (var i = 0; i < checkboxes.length; i++) {
