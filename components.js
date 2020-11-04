@@ -3,22 +3,27 @@ Vue.component('family-member', {
         member: Object
     },
     methods: {
+        // Ensure labels for member inputs are unique
         createLabel: function(labelBase) { 
             var label = labelBase.replace(/[^A-Za-z0-9_:.-]/g, '')
             return `${this.member.memberId}_${label}`
         },
+        // If "Missing Documents" is checked, make sure at least one missing documents input is checked. If one is checked, remove required for the others
         checkRequired: function(event) {
             var checkboxes = document.getElementsByClassName(event.target.className)
+            if (event.target.form.documents.checked) {
                 for (var i = 0; i < checkboxes.length; i++) {
-                    if (checkboxes[i].checked || !event.target.form.documents.checked) {
+                    if (checkboxes[i].checked) {
                         this.removeRequired(checkboxes);
                         return false;
                     }
-                    else {
-                        checkboxes[i].setAttribute('required', '');
-                    }
-                return true;
+                }
             }
+            else {
+                checkboxes[i].setAttribute('required', '');
+            }
+            
+            return true;
         },
         removeRequired: function(checkboxes) {
             for (var i = 0; i < checkboxes.length; i++) {
