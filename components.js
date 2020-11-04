@@ -17,10 +17,11 @@ Vue.component('family-member', {
                         this.removeRequired(checkboxes);
                         return false;
                     }
+                    else {
+                        checkboxes[i].setAttribute('required', '');
+                    }
                 }
-            }
-            else {
-                checkboxes[i].setAttribute('required', '');
+
             }
             
             return true;
