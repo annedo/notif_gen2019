@@ -124,8 +124,15 @@ var app = new Vue({
     computed: {
         defaultDueDate: function() {
             var today = new Date();
+            /* Formula for payment due date (last day of month)
+
             var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).toISOString().substring(0,10);
-            return lastDayOfMonth;
+            return lastDayOfMonth;*/
+            
+            // Formula for docs due date (90 days)
+            today.setDate(today.getDate() + 90);
+            var docsDueDate = today.toISOString().substring(0,10);
+            return docsDueDate;
         },
         displayDueDate: function() {
             var displayDate = new Date(this.dueDate).toLocaleDateString('en-us', {timeZone: 'UTC'});
