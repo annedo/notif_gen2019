@@ -103,6 +103,7 @@ var app = new Vue({
     el: '#app',
     data: {
         notifCategory: 'initialapp',
+        missingTrue: false,
         paid: false,
         autopay: false,
         validPayment: false,

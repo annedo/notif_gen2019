@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="css/style.css">
+        <meta name="robots" content="noindex">
     </head>
     <body>
         <main>
@@ -20,18 +21,6 @@
                                     <div>
                                         <input type="radio" id="initialapp" value="initialapp" v-model="notifCategory">
                                         <label for="initialapp">Initial Application</label>
-                                    </div>
-                                    <div>
-                                        <input type="radio" id="newdocs" value="newdocs" v-model="notifCategory">
-                                        <label for="newdocs">Need New Documents</label>
-                                    </div>
-                                    <div>
-                                        <input type="radio" id="documents" value="documents" v-model="notifCategory">
-                                        <label for="documents">Missing Documents</label>
-                                    </div>
-                                    <div>
-                                        <input type="radio" id="payment" value="payment" v-model="notifCategory">
-                                        <label for="payment">Missing Payment</label>
                                     </div>
                                 </fieldset>
                             </div>
@@ -56,6 +45,10 @@
                                             </div>
                                         </fieldset>
                                         <div>
+                                            <input type="checkbox" id="missingTrue" v-model="missingTrue">
+                                            <label for="missingTrue">Missing Documents?</label>
+                                        </div>
+                                        <div v-show="missingTrue == true">
                                             <label for="dueDate">Due Date:</label>
                                             <input type="date" id="dueDate" v-model="dueDate" required>
                                         </div>
@@ -94,13 +87,15 @@
                                     </fieldset>
                                 </fieldset>
                             </section>
-                            <section id="sectionDocs" v-show="notifCategory === 'documents' || notifCategory === 'initialapp'">
-                                <div class="flex">
-                                    <!--- TURN INTO TEMPLATE -->
-                                    <family-member v-for="member in familyMembers" :member="member" :key="member.memberId" v-on:remove="removeFamilyMember($event)"></family-member>
-                                </div>
-                                <button type="button" id="addMemberButton" v-on:click="addFamilyMember">+ Add Member</button>
-                            </section>
+                            <div v-show="missingTrue == true">
+                                <section id="sectionDocs" v-show="notifCategory === 'documents' || notifCategory === 'initialapp'">
+                                    <div class="flex">
+                                        <!--- TURN INTO TEMPLATE -->
+                                        <family-member v-for="member in familyMembers" :member="member" :key="member.memberId" v-on:remove="removeFamilyMember($event)"></family-member>
+                                    </div>
+                                    <button type="button" id="addMemberButton" v-on:click="addFamilyMember">+ Add Member</button>
+                                </section>
+                            </div>
                             <!-- MISSING PAYMENT FORM SECTION-->
                             <section id="sectionPayment" v-show="notifCategory === 'payment' || notifCategory === 'initialapp'">
                                 <div>
@@ -132,21 +127,23 @@
                                     <label for="premium">Monthly Premium:</label>
                                     <input type="text" id="premium" v-model="premium" :required="notifCategory === 'payment'">
                                 </div>
-                                <div>
-                                    <label for="total">Total Owed:</label>
-                                    <input type="text" id="total" v-model="total">
-                                </div>
-                                <div>
-                                    <label for="paid">Paid?</label>
-                                    <input type="checkbox" id="paid" v-model="paid">
-                                </div>
-                                <div id="isPaid" v-show="paid">
-                                    <label for="autopay">Autopay?</label>
-                                    <input type="checkbox" id="autopay" v-model="autopay">
-                                </div>
-                                <div id="isNotPaid" v-show="!paid">
-                                    <label for="validPayment">Valid Payment Method?</label>
-                                    <input type="checkbox" id="validPayment" v-model="validPayment">
+                                <div v-show="notifCategory === 'payment'">
+                                    <div>
+                                        <label for="total">Total Owed:</label>
+                                        <input type="text" id="total" v-model="total">
+                                    </div>
+                                    <div>
+                                        <label for="paid">Paid?</label>
+                                        <input type="checkbox" id="paid" v-model="paid">
+                                    </div>
+                                    <div id="isPaid" v-show="paid">
+                                        <label for="autopay">Autopay?</label>
+                                        <input type="checkbox" id="autopay" v-model="autopay">
+                                    </div>
+                                    <div id="isNotPaid" v-show="!paid">
+                                        <label for="validPayment">Valid Payment Method?</label>
+                                        <input type="checkbox" id="validPayment" v-model="validPayment">
+                                    </div>
                                 </div>
                             </section>
                             <button type="button" v-on:click="resetForm">Reset</button>
