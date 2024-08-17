@@ -22,6 +22,14 @@
                                         <input type="radio" id="initialapp" value="initialapp" v-model="notifCategory">
                                         <label for="initialapp">Initial Application</label>
                                     </div>
+                                    <div>
+                                        <input type="radio" id="newdocs" value="newdocs" v-model="notifCategory">
+                                        <label for="newdocs">Need New Documents</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="payment" value="payment" v-model="notifCategory">
+                                        <label for="payment">Missing Payment</label>
+                                    </div>
                                 </fieldset>
                             </div>
                             <!-- GLOBAL FORM SECTION-->
@@ -45,10 +53,10 @@
                                             </div>
                                         </fieldset>
                                         <div>
-                                            <input type="checkbox" id="missingTrue" v-model="missingTrue">
-                                            <label for="missingTrue">Missing Documents?</label>
+                                            <input type="checkbox" id="missingDocs" v-model="missingDocs">
+                                            <label for="missingDocs">Missing Documents?</label>
                                         </div>
-                                        <div v-show="missingTrue == true">
+                                        <div v-show="missingDocs == true">
                                             <label for="dueDate">Due Date:</label>
                                             <input type="date" id="dueDate" v-model="dueDate" required>
                                         </div>
@@ -87,7 +95,7 @@
                                     </fieldset>
                                 </fieldset>
                             </section>
-                            <div v-show="missingTrue == true">
+                            <div v-show="missingDocs == true">
                                 <section id="sectionDocs" v-show="notifCategory === 'documents' || notifCategory === 'initialapp'">
                                     <div class="flex">
                                         <!--- TURN INTO TEMPLATE -->
@@ -127,7 +135,7 @@
                                     <label for="premium">Monthly Premium:</label>
                                     <input type="text" id="premium" v-model="premium" :required="notifCategory === 'payment'">
                                 </div>
-                                <div v-show="notifCategory === 'payment'">
+                                <div v-show="notifCategory === 'payment' || notifCategory === 'initialapp'">
                                     <div>
                                         <label for="total">Total Owed:</label>
                                         <input type="text" id="total" v-model="total">
