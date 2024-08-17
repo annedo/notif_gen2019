@@ -103,7 +103,7 @@ var app = new Vue({
     el: '#app',
     data: {
         notifCategory: 'initialapp',
-        missingTrue: false,
+        missingDocs: false,
         paid: false,
         autopay: false,
         validPayment: false,
@@ -237,6 +237,7 @@ var app = new Vue({
         },
         resetForm: function() {
             this.notifCategory = 'initialapp';
+            this.missingDocs = false;
             this.paid = false;
             this.autopay = false;
             this.validPayment = false;
